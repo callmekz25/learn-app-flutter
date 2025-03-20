@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:khanhvinh_flutter_app/commercial_app/controllers/controller_fruit.dart';
+// import 'package:khanhvinh_flutter_app/commercial_app/controllers/controller_fruit.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:khanhvinh_flutter_app/commercial_app/page_detail_fruit.dart';
+
+import 'controllers/controller_fruit_v2.dart';
 
 class AppFruitStore extends StatelessWidget {
   const AppFruitStore({super.key});
@@ -99,22 +101,22 @@ class PageHomeFruitStore extends StatelessWidget {
                           "${e.moTa}",
                           style: TextStyle(fontSize: 18, color: Colors.grey),
                         ),
-                        RatingBar.builder(
-                          initialRating: 3,
-                          minRating: 1,
-                          direction: Axis.horizontal,
-                          allowHalfRating: true,
-                          itemCount: 5,
-                          itemSize: 22,
-                          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                          itemBuilder: (context, _) => Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                          ),
-                          onRatingUpdate: (rating) {
-                            print(rating);
-                          },
-                        ),
+                        // RatingBar.builder(
+                        //   initialRating: 3,
+                        //   minRating: 1,
+                        //   direction: Axis.horizontal,
+                        //   allowHalfRating: true,
+                        //   itemCount: 5,
+                        //   itemSize: 22,
+                        //   itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                        //   itemBuilder: (context, _) => Icon(
+                        //     Icons.star,
+                        //     color: Colors.amber,
+                        //   ),
+                        //   onRatingUpdate: (rating) {
+                        //     print(rating);
+                        //   },
+                        // ),
                       ],
                     ),
                   )),

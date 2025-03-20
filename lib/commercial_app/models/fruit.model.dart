@@ -8,11 +8,11 @@ class Fruit {
   Fruit({required this.id, this.gia, required this.ten, this.moTa, this.anh});
   factory Fruit.fromJson(Map<String, dynamic> json) {
     return Fruit(
-      id: json['id'] as int,
-      ten: json['ten'] as String,
-      moTa: json['moTa'] as String,
-      anh: json['anh'] as String,
-    );
+        id: json['id'] as int,
+        ten: json['ten'] as String,
+        moTa: json['moTa'] as String,
+        anh: json['anh'] as String,
+        gia: json['gia']);
   }
 }
 
@@ -33,6 +33,60 @@ class FruitSnapshot {
 
   static List<Fruit> getAll() {
     return data;
+  }
+
+  static Future<Map<int, Fruit>> getMapFruit() async {
+    final supabase = Supabase.instance.client;
+    final data = await supabase.from("Fruit").select("");
+    var iterable = data.map(
+      (e) => Fruit.fromJson(e),
+    );
+    Map<int, Fruit> maps = Map.fromIterable(
+      iterable,
+      key: (fruit) => fruit.id,
+      value: (fruit) => fruit,
+    );
+    return maps;
+  }
+
+  static listenFruitChange(Map<int, Fruit> maps, {Function()? updateUI}) {
+    final supabase = Supabase.instance.client;
+    supabase
+        .channel('public:fruit')
+        .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'Fruit',
+            callback: (payload) {
+              print('Change received: ${payload.toString()}');
+              switch (payload.eventType) {
+                case PostgresChangeEvent.insert:
+                  {
+                    Fruit f = Fruit.fromJson(payload.newRecord);
+                    maps[f.id] = f;
+                    updateUI?.call();
+                    break;
+                  }
+                case PostgresChangeEvent.update:
+                  {
+                    Fruit f = Fruit.fromJson(payload.newRecord);
+                    maps[f.id] = f;
+                    updateUI?.call();
+                    break;
+                  }
+                case PostgresChangeEvent.delete:
+                  {
+                    maps.remove(payload.oldRecord["id"]);
+                    updateUI?.call();
+                    break;
+                  }
+                default:
+                  {
+                    return null;
+                  }
+              }
+            })
+        .subscribe();
   }
 }
 

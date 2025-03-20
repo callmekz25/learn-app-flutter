@@ -5,8 +5,10 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:khanhvinh_flutter_app/commercial_app/models/fruit.model.dart';
 
-import 'controllers/controller_fruit.dart';
+// import 'controllers/controller_fruit.dart';
 import 'package:badges/badges.dart' as badges;
+
+import 'controllers/controller_fruit_v2.dart';
 
 class PageDetailFruit extends StatelessWidget {
   PageDetailFruit({super.key, required this.fruit});
