@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:khanhvinh_flutter_app/commercial_app/app_fruit_store.dart';
+import 'package:khanhvinh_flutter_app/commercial_app/page_fruit_stream.dart';
 import 'package:khanhvinh_flutter_app/getX/getX.dart';
 import 'package:khanhvinh_flutter_app/getX/getX_simple_state_management.dart';
 import 'package:khanhvinh_flutter_app/json_list/page_album.dart';
 import 'package:khanhvinh_flutter_app/layout/grid_view_example.dart';
 import 'package:khanhvinh_flutter_app/profile/page_profile.dart';
+import 'package:khanhvinh_flutter_app/rss/pages/page_rss.dart';
 
 class PageHome extends StatelessWidget {
   const PageHome({super.key});
@@ -34,6 +36,9 @@ class PageHome extends StatelessWidget {
                   destination: AppFruitStore()),
               buildButton(context,
                   title: "Page Album", destination: PageAlbum()),
+              buildButton(context, title: "Page Rss", destination: PageRss()),
+              buildButton(context,
+                  title: "Page Fruit Stream", destination: PageFruitStream()),
             ],
           ),
         ),

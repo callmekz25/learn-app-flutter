@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:khanhvinh_flutter_app/commercial_app/models/fruit.model.dart';
+import 'package:khanhvinh_flutter_app/commercial_app/supabase.helper.dart';
 
 class ControllerFruit extends GetxController {
   Map<int, Fruit> maps = {};
@@ -20,8 +21,7 @@ class ControllerFruit extends GetxController {
   void _docDL() async {
     maps = await FruitSnapshot.getMapFruit();
     update(["fruits"]);
-    FruitSnapshot.listenFruitChange(maps,
-        updateUI: () => this.update(["fruits"]));
+    FruitSnapshot.listenFruitChange(maps, updateUI: () => update(["fruits"]));
   }
 
   void themGH(Fruit f) {

@@ -1,3 +1,4 @@
+import 'package:khanhvinh_flutter_app/commercial_app/supabase.helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Fruit {
@@ -14,9 +15,38 @@ class Fruit {
         anh: json['anh'] as String,
         gia: json['gia']);
   }
+  Map<dynamic, dynamic> toJson() {
+    return {"id": gia, "ten": ten, "moTa": moTa, "anh": anh, "gia": gia};
+  }
 }
 
 class FruitSnapshot {
+  Fruit fruit;
+
+  FruitSnapshot({required this.fruit});
+  Future<dynamic> update(Fruit newFruit) async {
+    final supabase = Supabase.instance.client;
+    var data = await supabase
+        .from("Fruit")
+        .update(newFruit.toJson())
+        .eq("id", fruit.id);
+
+    return data;
+  }
+
+  Future<void> delete() async {
+    final supabase = Supabase.instance.client;
+    await supabase.from("Fruit").delete().eq("id", fruit.id);
+    await removeImage(bucket: "fruit", path: "");
+    return;
+  }
+
+  static Future<Fruit> insert(Fruit newFruit) async {
+    final supabase = Supabase.instance.client;
+    var data = await supabase.from('Fruit').insert(newFruit.toJson());
+    return data;
+  }
+
   static Future<List<Fruit>> getFruit() async {
     final supabase = Supabase.instance.client;
     List<Fruit> fruits = [];
@@ -36,57 +66,24 @@ class FruitSnapshot {
   }
 
   static Future<Map<int, Fruit>> getMapFruit() async {
-    final supabase = Supabase.instance.client;
-    final data = await supabase.from("Fruit").select("");
-    var iterable = data.map(
-      (e) => Fruit.fromJson(e),
+    return await getMapData(
+      table: "Fruit",
+      fromJson: Fruit.fromJson,
+      getId: (fruit) => fruit.id,
     );
-    Map<int, Fruit> maps = Map.fromIterable(
-      iterable,
-      key: (fruit) => fruit.id,
-      value: (fruit) => fruit,
-    );
-    return maps;
+  }
+
+  static Stream<List<Fruit>> getFruitStream() {
+    return getDataStream(table: "Fruit", ids: ["id"], fromJson: Fruit.fromJson);
   }
 
   static listenFruitChange(Map<int, Fruit> maps, {Function()? updateUI}) {
-    final supabase = Supabase.instance.client;
-    supabase
-        .channel('public:fruit')
-        .onPostgresChanges(
-            event: PostgresChangeEvent.all,
-            schema: 'public',
-            table: 'Fruit',
-            callback: (payload) {
-              print('Change received: ${payload.toString()}');
-              switch (payload.eventType) {
-                case PostgresChangeEvent.insert:
-                  {
-                    Fruit f = Fruit.fromJson(payload.newRecord);
-                    maps[f.id] = f;
-                    updateUI?.call();
-                    break;
-                  }
-                case PostgresChangeEvent.update:
-                  {
-                    Fruit f = Fruit.fromJson(payload.newRecord);
-                    maps[f.id] = f;
-                    updateUI?.call();
-                    break;
-                  }
-                case PostgresChangeEvent.delete:
-                  {
-                    maps.remove(payload.oldRecord["id"]);
-                    updateUI?.call();
-                    break;
-                  }
-                default:
-                  {
-                    return null;
-                  }
-              }
-            })
-        .subscribe();
+    listenDataChange(maps,
+        channel: "public:fruit",
+        schema: "public",
+        fromJson: Fruit.fromJson,
+        getId: (fruit) => fruit.id,
+        table: "Fruit");
   }
 }
 
