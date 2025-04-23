@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:khanhvinh_flutter_app/commercial_app/admin_pages/fruits_page_admin.dart';
 import 'package:khanhvinh_flutter_app/commercial_app/app_fruit_store.dart';
 import 'package:khanhvinh_flutter_app/commercial_app/page_fruit_stream.dart';
 import 'package:khanhvinh_flutter_app/getX/getX.dart';
 import 'package:khanhvinh_flutter_app/getX/getX_simple_state_management.dart';
 import 'package:khanhvinh_flutter_app/json_list/page_album.dart';
 import 'package:khanhvinh_flutter_app/layout/grid_view_example.dart';
+import 'package:khanhvinh_flutter_app/layout/list_view_example.dart';
+import 'package:khanhvinh_flutter_app/local_storage/page_get_storage.dart';
+import 'package:khanhvinh_flutter_app/permission/page_permission.dart';
 import 'package:khanhvinh_flutter_app/profile/page_profile.dart';
 import 'package:khanhvinh_flutter_app/rss/pages/page_rss.dart';
+import 'package:khanhvinh_flutter_app/url_handler/call_phone.dart';
 
 class PageHome extends StatelessWidget {
   const PageHome({super.key});
@@ -28,6 +33,8 @@ class PageHome extends StatelessWidget {
               buildButton(context,
                   title: "My grid view", destination: PageGridView()),
               buildButton(context,
+                  title: "My list view", destination: PageListView()),
+              buildButton(context,
                   title: "My page counter", destination: PageCounterGetX()),
               buildButton(context,
                   title: "My page state management", destination: GetXApp()),
@@ -39,6 +46,14 @@ class PageHome extends StatelessWidget {
               buildButton(context, title: "Page Rss", destination: PageRss()),
               buildButton(context,
                   title: "Page Fruit Stream", destination: PageFruitStream()),
+              buildButton(context,
+                  title: "Page Call Phone", destination: CallPhone()),
+              buildButton(context,
+                  title: "Page Admin Fruit", destination: PageFruitsAdmin()),
+              buildButton(context,
+                  title: "Page Permission", destination: PagePermission()),
+              buildButton(context,
+                  title: "Page Get Storage", destination: PageGetStorage()),
             ],
           ),
         ),

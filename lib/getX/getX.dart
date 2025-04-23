@@ -34,7 +34,7 @@ class PageCounterGetX extends StatelessWidget {
             Obx(
               () => Text(
                 "${controller._counter}",
-                style: TextStyle(fontSize: 25),
+                style: TextStyle(fontSize: 25, color: Colors.red),
               ),
             ),
             GetX<CounterController>(

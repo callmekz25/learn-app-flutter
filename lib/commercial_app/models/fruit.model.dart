@@ -16,7 +16,7 @@ class Fruit {
         gia: json['gia']);
   }
   Map<dynamic, dynamic> toJson() {
-    return {"id": gia, "ten": ten, "moTa": moTa, "anh": anh, "gia": gia};
+    return {"id": id, "ten": ten, "moTa": moTa, "anh": anh, "gia": gia};
   }
 }
 
@@ -34,10 +34,10 @@ class FruitSnapshot {
     return data;
   }
 
-  Future<void> delete() async {
+  static Future<void> delete(fruitId) async {
     final supabase = Supabase.instance.client;
-    await supabase.from("Fruit").delete().eq("id", fruit.id);
-    await removeImage(bucket: "fruit", path: "");
+    await supabase.from("Fruit").delete().eq("id", fruitId);
+    await removeImage(bucket: "fruits", path: "fruit_${fruitId}.jpg");
     return;
   }
 
