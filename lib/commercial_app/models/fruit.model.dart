@@ -24,12 +24,12 @@ class FruitSnapshot {
   Fruit fruit;
 
   FruitSnapshot({required this.fruit});
-  Future<dynamic> update(Fruit newFruit) async {
+  static Future<dynamic> update(Fruit newFruit) async {
     final supabase = Supabase.instance.client;
     var data = await supabase
         .from("Fruit")
         .update(newFruit.toJson())
-        .eq("id", fruit.id);
+        .eq("id", newFruit.id);
 
     return data;
   }

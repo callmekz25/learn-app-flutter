@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:khanhvinh_flutter_app/commercial_app/admin_pages/fruit_add_page.dart';
+import 'package:khanhvinh_flutter_app/commercial_app/admin_pages/fruit_update_page.dart';
 import 'package:khanhvinh_flutter_app/helpers/dialog.dart';
 import 'package:khanhvinh_flutter_app/my_widgets/async_widget.dart';
 
@@ -40,7 +41,12 @@ class PageFruitsAdmin extends StatelessWidget {
                               SlidableAction(
                                 // An action can be bigger than the others.
 
-                                onPressed: (context) {},
+                                onPressed: (context) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        PageUpdateFruit(fruit: fruit),
+                                  ));
+                                },
                                 backgroundColor: Colors.blue,
                                 foregroundColor: Colors.white,
                                 icon: Icons.edit,

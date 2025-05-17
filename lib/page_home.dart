@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:khanhvinh_flutter_app/commercial_app/admin_pages/fruits_page_admin.dart';
 import 'package:khanhvinh_flutter_app/commercial_app/app_fruit_store.dart';
+import 'package:khanhvinh_flutter_app/commercial_app/page_auth_user.dart';
 import 'package:khanhvinh_flutter_app/commercial_app/page_fruit_stream.dart';
+import 'package:khanhvinh_flutter_app/commercial_app/page_verify_otp.dart';
 import 'package:khanhvinh_flutter_app/getX/getX.dart';
 import 'package:khanhvinh_flutter_app/getX/getX_simple_state_management.dart';
 import 'package:khanhvinh_flutter_app/json_list/page_album.dart';
@@ -54,6 +56,8 @@ class PageHome extends StatelessWidget {
                   title: "Page Permission", destination: PagePermission()),
               buildButton(context,
                   title: "Page Get Storage", destination: PageGetStorage()),
+              buildButton(context,
+                  title: "Page Auth User", destination: PageAuthUser()),
             ],
           ),
         ),

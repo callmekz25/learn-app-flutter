@@ -4,16 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:khanhvinh_flutter_app/commercial_app/models/fruit.model.dart';
 import 'package:khanhvinh_flutter_app/commercial_app/supabase.helper.dart';
+import 'package:khanhvinh_flutter_app/helpers/dialog.dart';
 
-class PageAddFruit extends StatefulWidget {
-  const PageAddFruit({super.key});
-
+class PageUpdateFruit extends StatefulWidget {
+  PageUpdateFruit({super.key, required this.fruit});
+  Fruit fruit;
   @override
-  State<PageAddFruit> createState() => _PageAddFruitState();
+  State<PageUpdateFruit> createState() => _PageUpdateFruitState();
 }
 
-class _PageAddFruitState extends State<PageAddFruit> {
+class _PageUpdateFruitState extends State<PageUpdateFruit> {
   XFile? xFile;
+  String? imageUrl;
   TextEditingController txtId = TextEditingController();
   TextEditingController txtTen = TextEditingController();
   TextEditingController txtGia = TextEditingController();
@@ -23,7 +25,7 @@ class _PageAddFruitState extends State<PageAddFruit> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Page add fruit"),
+        title: Text("Page update fruit"),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: SingleChildScrollView(
@@ -34,10 +36,7 @@ class _PageAddFruitState extends State<PageAddFruit> {
               Container(
                 height: 300,
                 child: xFile == null
-                    ? Icon(
-                        Icons.image,
-                        size: 50,
-                      )
+                    ? Image.network(widget.fruit.anh ?? "Default")
                     : Image.file(File(xFile!.path)),
               ),
               Row(
@@ -64,6 +63,7 @@ class _PageAddFruitState extends State<PageAddFruit> {
               ),
               TextField(
                 controller: txtId,
+                readOnly: true,
                 keyboardType: TextInputType.numberWithOptions(
                     signed: false, decimal: false),
                 decoration: InputDecoration(labelText: "Id"),
@@ -89,33 +89,28 @@ class _PageAddFruitState extends State<PageAddFruit> {
                 children: [
                   ElevatedButton(
                       onPressed: () async {
+                        Fruit fruit = widget.fruit;
+                        showSnackBar(context,
+                            message: "Đang cập nhật ${fruit.ten}...",
+                            seconds: 10);
                         if (xFile != null) {
-                          ScaffoldMessenger.of(context).clearSnackBars();
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              duration: Duration(seconds: 5),
-                              content: Text("Đang thêm ${txtTen.text}...")));
-                          //1. Thêm ảnh, lấy url
-                          //2.
-                          var imageUrl = await uploadImage(
+                          var imageUrl = await updateImage(
                               image: File(xFile!.path),
                               bucket: "fruits",
-                              path: "fruit_${txtId.text}.jpg");
+                              path: "fruit_${txtId.text}.jpg",
+                              upsert: true);
 
-                          Fruit fruit = Fruit(
-                              id: int.parse(txtId.text),
-                              ten: txtTen.text,
-                              gia: int.parse(txtGia.text),
-                              anh: imageUrl,
-                              moTa: txtMota.text);
-
-                          FruitSnapshot.insert(fruit);
-                          ScaffoldMessenger.of(context).clearSnackBars();
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              duration: Duration(seconds: 5),
-                              content: Text("Đã thêm ${txtTen.text}")));
+                          fruit.anh = imageUrl;
                         }
+                        fruit.ten = txtTen.text;
+                        fruit.moTa = txtMota.text;
+                        fruit.gia = int.parse(txtGia.text);
+
+                        await FruitSnapshot.update(fruit);
+                        showSnackBar(context,
+                            message: "Đã cập nhật ${fruit.ten}...");
                       },
-                      child: Text("Thêm")),
+                      child: Text("Cập nhật")),
                   SizedBox(
                     width: 15,
                   ),
@@ -126,5 +121,15 @@ class _PageAddFruitState extends State<PageAddFruit> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    txtId.text = widget.fruit.id.toString();
+    txtTen.text = widget.fruit.ten;
+    txtMota.text = widget.fruit.moTa ?? "";
+    txtGia.text = widget.fruit.gia.toString();
   }
 }

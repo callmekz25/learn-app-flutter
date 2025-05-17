@@ -23,11 +23,25 @@ Stream<List<T>> getDataStream<T>(
 }
 
 Future<String> uploadImage(
-    {required File image, required String bucket, required String path}) async {
+    {required File image,
+    required String bucket,
+    required String path,
+    bool upsert = false}) async {
   await supabase.storage.from(bucket).upload(path, image,
-      fileOptions: const FileOptions(cacheControl: "3600", upsert: false));
+      fileOptions: FileOptions(cacheControl: "3600", upsert: upsert));
   final String publicUrl = supabase.storage.from(bucket).getPublicUrl(path);
   return publicUrl;
+}
+
+Future<String> updateImage(
+    {required File image,
+    required String bucket,
+    required String path,
+    bool upsert = false}) async {
+  await supabase.storage.from(bucket).update(path, image,
+      fileOptions: FileOptions(cacheControl: "3600", upsert: upsert));
+  final String publicUrl = supabase.storage.from(bucket).getPublicUrl(path);
+  return publicUrl + "?ts=${DateTime.now().millisecond}";
 }
 
 Future<Map<int, T>> getMapData<T>(
